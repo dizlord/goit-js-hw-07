@@ -4,6 +4,8 @@ const refs = {
   galleryEl: document.querySelector('.gallery'),
 };
 
+let instance = null;
+
 function createGallery() {
   const galleryString = galleryItems
     .map(galleryItem => {
@@ -27,22 +29,20 @@ function createGallery() {
 createGallery();
 
 function showModalImg(url) {
-  const instance = basicLightbox.create(`
+  instance = basicLightbox.create(`
     <img src="${url}">
 `);
 
   instance.show();
-
-  if (instance.visible()) {
-    window.addEventListener('keydown', event => {
-      if (event.code === 'Escape') {
-        instance.close();
-      }
-    });
-  }
 }
 
 refs.galleryEl.addEventListener('click', onGalleryClick);
+
+function onEscapeClick(event) {
+  if (event.code === 'Escape') {
+    instance.close();
+  }
+}
 
 function onGalleryClick(event) {
   event.preventDefault();
@@ -50,4 +50,9 @@ function onGalleryClick(event) {
     return;
   }
   showModalImg(event.target.dataset.source);
+  if (instance.visible()) {
+    window.addEventListener('keydown', onEscapeClick);
+  } else {
+    window.removeEventListener('keydown', onEscapeClick);
+  }
 }
