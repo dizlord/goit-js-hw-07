@@ -34,6 +34,9 @@ function showModalImg(url) {
 `);
 
   instance.show();
+  if (instance.visible()) {
+    window.addEventListener('keydown', onEscapeClick);
+  }
 }
 
 refs.galleryEl.addEventListener('click', onGalleryClick);
@@ -41,6 +44,7 @@ refs.galleryEl.addEventListener('click', onGalleryClick);
 function onEscapeClick(event) {
   if (event.code === 'Escape') {
     instance.close();
+    window.removeEventListener('keydown', onEscapeClick);
   }
 }
 
@@ -50,9 +54,4 @@ function onGalleryClick(event) {
     return;
   }
   showModalImg(event.target.dataset.source);
-  if (instance.visible()) {
-    window.addEventListener('keydown', onEscapeClick);
-  } else {
-    window.removeEventListener('keydown', onEscapeClick);
-  }
 }
