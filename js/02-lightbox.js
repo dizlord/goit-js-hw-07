@@ -19,7 +19,7 @@ function createGallery() {
 
 createGallery();
 
-var lightbox = new SimpleLightbox('.gallery a', {
+new SimpleLightbox('.gallery a', {
   nav: true,
   close: true,
   caption: true,
