@@ -4,8 +4,6 @@ const refs = {
   galleryEl: document.querySelector('.gallery'),
 };
 
-let instance = null;
-
 function createGallery() {
   const galleryString = galleryItems
     .map(galleryItem => {
@@ -29,24 +27,30 @@ function createGallery() {
 createGallery();
 
 function showModalImg(url) {
-  instance = basicLightbox.create(`
+  const instance = basicLightbox.create(
+    `
     <img src="${url}">
-`);
+`,
+    {
+      onShow: () => {
+        window.addEventListener('keydown', closeByEscape);
+      },
+      onClose: () => {
+        window.removeEventListener('keydown', closeByEscape);
+      },
+    }
+  );
 
   instance.show();
-  if (instance.visible()) {
-    window.addEventListener('keydown', onEscapeClick);
+
+  function closeByEscape(evt) {
+    if (evt.keyCode === 27) {
+      instance.close();
+    }
   }
 }
 
 refs.galleryEl.addEventListener('click', onGalleryClick);
-
-function onEscapeClick(event) {
-  if (event.code === 'Escape') {
-    instance.close();
-    window.removeEventListener('keydown', onEscapeClick);
-  }
-}
 
 function onGalleryClick(event) {
   event.preventDefault();
